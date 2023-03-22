@@ -1,0 +1,24 @@
+version: '3'
+services:
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    env_file:
+      - ./.env
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
+    ports:
+      - '6000:27017'
+
+  python-service:
+    image: habdelhedi/python-samples/fastapi-crud-mongo:1.0.0
+    container_name: fastapi-sample
+    env_file:
+      - ./.env
+    environment:
+      MONGODB_HOST: mongodb://admin:password123@mongo:27017/
+      MONGODB_DBNAME: ${MONGO_INITDB_DATABASE}
+    ports:
+      - '8888:8000'
