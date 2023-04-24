@@ -9,6 +9,11 @@ COPY . /code/app
 
 ENV PYTHONPATH=/code
 
+RUN opentelemetry-bootstrap --action=install
+
+ENV OTEL_RESOURCE_ATTRIBUTES="service.name=My Python APP"
+ENV OTEL_EXPORTER_OTLP_ENDPOINT="http://192.168.56.19:4318"  
+
 
 WORKDIR /code/app
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--reload"]
+CMD ["opentelemetry-instrument", "--traces",_"exporter otlp_proto_http", "--metrics_exporter", "otlp_proto_http", "uvicorn", "main:app", "--host", "0.0.0.0", "--reload"]
